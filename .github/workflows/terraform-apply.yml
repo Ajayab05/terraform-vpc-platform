@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: environments/prod
+        working-directory: environments/dev
 
     steps:
 
