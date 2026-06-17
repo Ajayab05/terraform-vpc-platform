@@ -1,0 +1,31 @@
+name: Deploy-VPC
+
+on:
+
+  push:
+    branches:
+      - main
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    environment: production
+
+    defaults:
+      run:
+        working-directory: environments/prod
+
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve

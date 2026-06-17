@@ -1,0 +1,50 @@
+name: VPC-PR-Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  validate:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: environments/prod
+
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      run: terraform init -backend=false
+
+    - name: Terraform Format
+      run: terraform fmt -recursive -check
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Install TFLint
+      run: |
+        curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+    - name: TFLint
+      run: tflint --recursive
+
+    - name: TFSEC
+      uses: aquasecurity/tfsec-action@v1.0.3
+
+    - name: Checkov
+      uses: bridgecrewio/checkov-action@master
+
+    - name: Terrascan
+      uses: tenable/terrascan-action@main
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
