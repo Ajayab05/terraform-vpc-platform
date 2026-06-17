@@ -1,4 +1,4 @@
-name: VPC-PR-Validation test 01 01
+name: VPC-PR-Validation
 
 on:
   pull_request:
